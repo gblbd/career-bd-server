@@ -554,7 +554,42 @@ async function run() {
     // api to save a employer Profile
     app.post("/employerProfile", async (req, res) => {
       const employer = req.body;
-      const result = await employerCollections.insertOne(employer);
+      const bodyData = new FormData();
+      var resx =employer.image.split(",")[1].trim();
+      console.log("one");
+      bodyData.append("image", resx);
+      const response = await Axios({
+        method: "post",
+        url: `https://api.imgbb.com/1/upload?key=${imageHostKey}`,
+        headers: bodyData.getHeaders(),
+        data: bodyData,
+      });
+
+      console.log("cccccc", response);
+      const imageUrl = response.data.data.url;
+      const newData = {
+        email: employer.email,
+        name: employer.name,
+
+        companyNameEn: employer.companyNameEn,
+        organizationType:employer.organizationType,
+        companyNameBn: employer.companyNameBn,
+      
+        companyLogo: imageUrl,
+        estdYear: employer. estdYear,
+        companySize: employer.companySize,
+        addressEng: employer.addressEng,
+        addressBng: employer.addressBng,
+        busiDescription: employer.busiDescription,
+
+        tradeLicense:employer.tradeLicense,
+        websiteURL: employer.websiteURL,
+        contactPersonName: employer.contactPersonName,
+        contactPersonDesignation: employer.contactPersonDesignation,
+        contactPersonEmail: employer.contactPersonEmail,
+        contactPersonPhone: employer.contactPersonPhone,
+      }
+      const result = await employerCollections.insertOne(newData);
       res.send(result);
     });
 
