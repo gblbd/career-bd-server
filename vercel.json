@@ -8,7 +8,7 @@
     ],
     "headers": [
         {
-            "source": "/api/(.*)",
+            "source": "/(.*)",
             "headers": [
                 {
                     "key": "Access-Control-Allow-Origin",
@@ -19,13 +19,13 @@
     ],
     "rewrites": [
         {
-            "source": "/api/(.*)",
+            "source": "/(.*)",
             "destination": "http://careersbangladesh.com"
         }
     ],
     "public": true,
     "routes": {
-        "/api/*": {
+        "/*": {
             "methods": [
                 "GET",
                 "POST",
@@ -40,7 +40,7 @@
     },
     "crons": [
         {
-            "path": "/api/cron",
+            "path": "/cron",
             "schedule": "0 10 * * *"
         }
     ]
