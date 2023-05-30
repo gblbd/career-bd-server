@@ -13,21 +13,21 @@ app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 
 // midddle wares
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-const whitelist = ["https://careersbangladesh.com"]
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error("Not allowed by CORS"))
-    }
-  },
-  credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = ["https://careersbangladesh.com", "http://localhost:3000"]
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (!origin || whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error("Not allowed by CORS"))
+//     }
+//   },
+//   credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.v2wwlww.mongodb.net/?retryWrites=true&w=majority`;
@@ -93,7 +93,7 @@ async function run() {
     });
 
     // api to show Job Categories
-    app.get("/api/jobCategories", async (req, res) => {
+    app.get("/jobCategories", async (req, res) => {
       const query = {};
       const cursor = jobCategoriesCollections.find(query);
       const category = await cursor.toArray();
