@@ -12,7 +12,7 @@
             "headers": [
                 {
                     "key": "Access-Control-Allow-Origin",
-                    "value": "http://careersbangladesh.com"
+                    "value": "https://careersbangladesh.com"
                 }
             ]
         }
@@ -20,24 +20,10 @@
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "http://careersbangladesh.com"
+            "destination": "https://careersbangladesh.com"
         }
     ],
     "public": true,
-    "routes": {
-        "/*": {
-            "methods": [
-                "GET",
-                "POST",
-                "PUT",
-                "PATCH",
-                "DELETE"
-            ],
-            "headers": {
-                "Access-Control-Allow-Origin": "http://careersbangladesh.com"
-            }
-        }
-    },
     "crons": [
         {
             "path": "/cron",
