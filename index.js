@@ -11,6 +11,7 @@ const port = process.env.PORT || 5000;
 app.use(fileUpload());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
+
 // midddle wares
 app.use(cors());
 app.use(express.json());
@@ -555,7 +556,7 @@ async function run() {
     app.post("/employerProfile", async (req, res) => {
       const employer = req.body;
       const bodyData = new FormData();
-      var resx =employer.image.split(",")[1].trim();
+      var resx = employer.image.split(",")[1].trim();
       console.log("one");
       bodyData.append("image", resx);
       const response = await Axios({
@@ -572,17 +573,17 @@ async function run() {
         name: employer.name,
 
         companyNameEn: employer.companyNameEn,
-        organizationType:employer.organizationType,
+        organizationType: employer.organizationType,
         companyNameBn: employer.companyNameBn,
-      
+
         companyLogo: imageUrl,
-        estdYear: employer. estdYear,
+        estdYear: employer.estdYear,
         companySize: employer.companySize,
         addressEng: employer.addressEng,
         addressBng: employer.addressBng,
         busiDescription: employer.busiDescription,
 
-        tradeLicense:employer.tradeLicense,
+        tradeLicense: employer.tradeLicense,
         websiteURL: employer.websiteURL,
         contactPersonName: employer.contactPersonName,
         contactPersonDesignation: employer.contactPersonDesignation,
@@ -749,8 +750,8 @@ async function run() {
       };
 
       const result = await jobSeekersPersonalDetails.insertOne(newData);
-     
-       res.send(result);
+
+      res.send(result);
     });
 
     // api to show jobseekers's Personal Details Data

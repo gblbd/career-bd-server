@@ -6,10 +6,42 @@
             "use": "@vercel/node"
         }
     ],
-    "routes": [
+    "headers": [
         {
-            "src": "/(.*)",
-            "dest": "/"
+            "source": "/api/(.*)",
+            "headers": [
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "http://careersbangladesh.com"
+                }
+            ]
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "http://careersbangladesh.com"
+        }
+    ],
+    "public": true,
+    "routes": {
+        "/api/*": {
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE"
+            ],
+            "headers": {
+                "Access-Control-Allow-Origin": "http://careersbangladesh.com"
+            }
+        }
+    },
+    "crons": [
+        {
+            "path": "/api/cron",
+            "schedule": "0 10 * * *"
         }
     ]
 }
