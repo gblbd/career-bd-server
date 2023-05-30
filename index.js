@@ -86,7 +86,7 @@ async function run() {
     });
 
     // api to show Job Categories
-    app.get("/jobCategories", async (req, res) => {
+    app.get("/api/jobCategories", async (req, res) => {
       const query = {};
       const cursor = jobCategoriesCollections.find(query);
       const category = await cursor.toArray();
