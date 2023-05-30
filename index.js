@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(express.json());
 
 app.use(cors({
-  origin: ['http://careersbangladesh.com', 'http://localhost:3000']
+  origin: 'http://careersbangladesh.com'
 }))
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.v2wwlww.mongodb.net/?retryWrites=true&w=majority`;
