@@ -6,13 +6,14 @@
       "use": "@now/node"
     }
   ],
+
   "routes": [
     {
-      "src": "/api/.*",
-      "dest": "http://careersbangladesh.com"
-    },
-    {
       "src": "/(.*)",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      "headers": {
+        "Access-Control-Allow-Origin": "http://careersbangladesh.com"
+      },
       "dest": "index.html"
     }
   ]
