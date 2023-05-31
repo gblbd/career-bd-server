@@ -93,12 +93,11 @@ async function run() {
     });
 
     // api to show Job Categories
-    app.get("/api/jobCategories", async (req, res) => {
+    app.get("/jobCategories", async (req, res) => {
       const query = {};
       const cursor = jobCategoriesCollections.find(query);
       const category = await cursor.toArray();
       res.send(category);
-      res.status(200).json(category);
     });
 
     // // api to delete a JobCategory
@@ -115,11 +114,10 @@ async function run() {
     //////////////////////////// job Post api Section Start//////////////////////////////////////////////
 
     // api to save a new Job
-    app.post("/api/jobs", async (req, res) => {
+    app.post("/jobs", async (req, res) => {
       const job = req.body;
       const result = await jobCollections.insertOne(job);
-      res.status(200).json(result);
-     
+      res.send(result);
     });
 
     // api to show all Job
@@ -128,8 +126,7 @@ async function run() {
         const query = {};
         const cursor = jobCollections.find(query).sort({ postDate: -1 });
         const job = await cursor.toArray();
-       
-        res.status(200).json(job);
+        res.send(job);
       } catch (err) {
         res.json({ message: err });
       }
