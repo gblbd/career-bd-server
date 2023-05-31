@@ -22,14 +22,14 @@
     { "source": "/api/(.*)", "destination": "https://careersbangladesh.com" }
   ],
   "public": true,
-  "routes": {
+  "routes": [
     "/api/*": {
       "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
       "headers": {
         "Access-Control-Allow-Origin": "http://localhost:3000"
       }
     }
-  },
+  ],
   "crons": [
     {
       "path": "/api/cron",
