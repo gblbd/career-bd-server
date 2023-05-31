@@ -13,7 +13,7 @@ app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 
 // midddle wares
-//app.use(express.json());
+app.use(express.json());
 app.use(cors());
 
 // const whitelist = ["https://careersbangladesh.com", "http://localhost:3000"]
@@ -84,14 +84,9 @@ async function run() {
       .collection("savedJobs");
 
     //////////////////////////// job Category api Section Start//////////////////////////////////////////////
-    app.use((req, res, next) => {
-      res.removeHeader('ETag');
-      next();
-    });
+
     // api to save a Job Category
     app.post("/jobCategories", async (req, res) => {
-      
-
       const category = req.body;
       const result = await jobCategoriesCollections.insertOne(category);
       res.send(result);
@@ -99,11 +94,10 @@ async function run() {
 
     // api to show Job Categories
     app.get("/jobCategories", async (req, res) => {
-     
-        const result = await jobCategoriesCollections.find({})
-        res.send(result);
-    
-      
+      const query = {};
+      const cursor = jobCategoriesCollections.find(query);
+      const category = await cursor.toArray();
+      res.send(category);
     });
 
     // // api to delete a JobCategory
@@ -121,7 +115,6 @@ async function run() {
 
     // api to save a new Job
     app.post("/jobs", async (req, res) => {
-      
       const job = req.body;
       const result = await jobCollections.insertOne(job);
       res.send(result);
