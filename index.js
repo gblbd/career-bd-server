@@ -87,6 +87,7 @@ async function run() {
 
     // api to save a Job Category
     app.post("/jobCategories", async (req, res) => {
+      res.setHeader('Cache-Control', 'no-cache');
       const category = req.body;
       const result = await jobCategoriesCollections.insertOne(category);
       res.send(result);
@@ -94,6 +95,7 @@ async function run() {
 
     // api to show Job Categories
     app.get("/jobCategories", async (req, res) => {
+      res.setHeader('Cache-Control', 'no-cache');
       const query = {};
       const cursor = jobCategoriesCollections.find(query);
       const category = await cursor.toArray();
@@ -115,6 +117,7 @@ async function run() {
 
     // api to save a new Job
     app.post("/jobs", async (req, res) => {
+      res.setHeader('Cache-Control', 'no-cache');
       const job = req.body;
       const result = await jobCollections.insertOne(job);
       res.send(result);
