@@ -1354,7 +1354,7 @@ async function run() {
 }
 run().catch((err) => console.log(err));
 
-app.get("/api", (req, res) => [
+app.get("/", (req, res) => [
   res.send("The Careers Bangladesh Server is Running."),
 ]);
 
