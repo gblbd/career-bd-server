@@ -6,25 +6,10 @@
       "use": "@vercel/node"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "https://careersbangladesh.com"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "content-type"
-        }
-      ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "https://careersbangladesh.com"
+      "src": "/(.*)",
+      "dest": "index.html"
     }
   ],
   "crons": [
