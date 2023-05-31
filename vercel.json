@@ -8,7 +8,7 @@
   ],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -19,13 +19,13 @@
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://careersbangladesh.com/api/$1"
+      "source": "/(.*)",
+      "destination": "https://careersbangladesh.com"
     }
   ],
   "crons": [
     {
-      "path": "/api/cron",
+      "path": "/cron",
       "schedule": "0 10 * * *"
     }
   ]
