@@ -570,7 +570,10 @@ async function run() {
     //////////////////////////// User api Section end //////////////////////////////////////////////
 
     //////////////////////////// Employer api Section Start //////////////////////////////////////////////
-
+    const FormData = require("form-data");
+    const Axios = require("axios");
+    // api to save a jobseekers's Personal Details
+    const imageHostKey = "79e6ec2db50a9ac8dbdb3b42a1accc92";
     // api to save a employer Profile
     app.post("/employerProfile", cors(corsOptions), async (req, res) => {
       const employer = req.body;
@@ -709,10 +712,7 @@ async function run() {
       res.send(jobseeker);
     });
 
-    const FormData = require("form-data");
-    const Axios = require("axios");
-    // api to save a jobseekers's Personal Details
-    const imageHostKey = "79e6ec2db50a9ac8dbdb3b42a1accc92";
+
     app.post("/jobSeekersPersonal", async (req, res) => {
       const savedData = req.body;
       console.log("rewfiles", savedData);
