@@ -86,14 +86,14 @@ async function run() {
     //////////////////////////// job Category api Section Start//////////////////////////////////////////////
 
     // api to save a Job Category
-    app.post("/jobCategories", async (req, res) => {
+    app.post("/api/jobCategories", async (req, res) => {
       const category = req.body;
       const result = await jobCategoriesCollections.insertOne(category);
       res.send(result);
     });
 
     // api to show Job Categories
-    app.get("/jobCategories", async (req, res) => {
+    app.get("/api/jobCategories", async (req, res) => {
       const query = {};
       const cursor = jobCategoriesCollections.find(query);
       const category = await cursor.toArray();
@@ -114,14 +114,14 @@ async function run() {
     //////////////////////////// job Post api Section Start//////////////////////////////////////////////
 
     // api to save a new Job
-    app.post("/jobs", async (req, res) => {
+    app.post("/api/jobs", async (req, res) => {
       const job = req.body;
       const result = await jobCollections.insertOne(job);
       res.send(result);
     });
 
     // api to show all Job
-    app.get("/jobs", async (req, res) => {
+    app.get("/api/jobs", async (req, res) => {
       try {
         const query = {};
         const cursor = jobCollections.find(query).sort({ postDate: -1 });
@@ -138,7 +138,7 @@ async function run() {
     //   salaryFrom,salaryTo,yearlyBonus,salaryReview,status,others}
 
     // api to update  a posted job
-    app.put("/postedJobUpdate/:id", async (req, res) => {
+    app.put("/api/postedJobUpdate/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const jobUpdate = req.body;
@@ -185,7 +185,7 @@ async function run() {
     });
 
     // api to search  Job by search field
-    app.get("/jobSearch", async (req, res) => {
+    app.get("/api/jobSearch", async (req, res) => {
       const search = req.query.search;
       // console.log("search data : ", search);
       const page = parseInt(req.query.page);
@@ -232,7 +232,7 @@ async function run() {
     // });
 
     // api to search  Job by search field
-    app.get("/homeJobSearch/:search/:search2/:search3", async (req, res) => {
+    app.get("/api/homeJobSearch/:search/:search2/:search3", async (req, res) => {
       let searchData = {};
       // console.log("Not searchData :",searchData.length);
 
@@ -265,7 +265,7 @@ async function run() {
     });
 
     // show a job by id
-    app.get("/jobs/:id", async (req, res) => {
+    app.get("/api/jobs/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const job = await jobCollections.findOne(query);
@@ -273,7 +273,7 @@ async function run() {
     });
 
     // show all applicant on a job
-    app.get("/applicantList", async (req, res) => {
+    app.get("/api/applicantList", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const job = await jobCollections.findOne(query);
@@ -281,7 +281,7 @@ async function run() {
     });
 
     // show all saved job by job category
-    app.get("/jobbycategory", async (req, res) => {
+    app.get("/api/jobbycategory", async (req, res) => {
       let query = {};
       if (req.query.category) {
         query = {
@@ -295,7 +295,7 @@ async function run() {
     });
 
     // search job by jobTitle saved job by job category
-    app.get("/jobByTitle", async (req, res) => {
+    app.get("/api/jobByTitle", async (req, res) => {
       let query = {};
       if (req.query.jobTitle) {
         query = {
@@ -308,7 +308,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/jobapplicant", async (req, res) => {
+    app.get("/api/jobapplicant", async (req, res) => {
       let query = {};
       if (req.query.jobId) {
         query = {
@@ -324,7 +324,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/categoryJobs", async (req, res) => {
+    app.get("/api/categoryJobs", async (req, res) => {
       const category = req.query.category;
 
       const query = { category: category };
@@ -333,7 +333,7 @@ async function run() {
     });
 
     // api to delete a saved Job
-    app.delete("/savedjob/:id", async (req, res) => {
+    app.delete("/api/savedjob/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await savedJobCollections.deleteOne(query);
@@ -346,7 +346,7 @@ async function run() {
     //////////////////////////// job Application api Section Start //////////////////////////////////////////////
 
     // save application on database
-    app.post("/applications", async (req, res) => {
+    app.post("/api/applications", async (req, res) => {
       const application = req.body;
 
       // const query = {
@@ -366,7 +366,7 @@ async function run() {
     });
 
     // api to show all application
-    app.get("/applications", async (req, res) => {
+    app.get("/api/applications", async (req, res) => {
       const query = {};
       const cursor = applicationCollections.find(query).sort({ _id: -1 });
       const result = await cursor.toArray();
@@ -374,7 +374,7 @@ async function run() {
     });
 
     // show all application by job seeker email
-    app.get("/jobseekerapply", async (req, res) => {
+    app.get("/api/jobseekerapply", async (req, res) => {
       // const decoded = req.decoded;
       // // console.log('inside orders api : ', decoded);
       // if (decoded.email !== req.query.email) {
@@ -395,7 +395,7 @@ async function run() {
     });
 
     // api to show already applied application
-    app.get("/appliedApplications", async (req, res) => {
+    app.get("/api/appliedApplications", async (req, res) => {
       const userEmail = req.query.email;
       const jobId = req.query.email;
       const query = { email };
@@ -408,7 +408,7 @@ async function run() {
     //////////////////////////// Saved Job api Section Start//////////////////////////////////////////////
 
     // api to save a jab as favorite
-    app.post("/savedjobs", async (req, res) => {
+    app.post("/api/savedjobs", async (req, res) => {
       const savedjob = req.body;
 
       const query = {
@@ -427,14 +427,14 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/savedjobs", async (req, res) => {
+    app.get("/api/savedjobs", async (req, res) => {
       const query = {};
       const result = await savedJobCollections.find(query).toArray();
       res.send(result);
     });
 
     // show all saved job by job seeker email
-    app.get("/jobseekersavedjobs", async (req, res) => {
+    app.get("/api/jobseekersavedjobs", async (req, res) => {
       let query = {};
       if (req.query.email) {
         query = {
@@ -450,14 +450,14 @@ async function run() {
     //////////////////////////// User api Section start //////////////////////////////////////////////
 
     // api to save a new user
-    app.post("/users", async (req, res) => {
+    app.post("/api/users", async (req, res) => {
       const user = req.body;
       const result = await userCollections.insertOne(user);
       res.send(result);
     });
 
     // api to show all users
-    app.get("/users", async (req, res) => {
+    app.get("/api/users", async (req, res) => {
       const query = {};
       const cursor = userCollections.find(query);
       const users = await cursor.toArray();
@@ -465,7 +465,7 @@ async function run() {
     });
 
     // api to show all employer
-    app.get("/employers", async (req, res) => {
+    app.get("/api/employers", async (req, res) => {
       const query = { userType: { $eq: "employer" } };
       const cursor = userCollections.find(query);
       const employers = await cursor.toArray();
@@ -473,7 +473,7 @@ async function run() {
     });
 
     // api to show all jobseeker
-    app.get("/jobseekers", async (req, res) => {
+    app.get("/api/jobseekers", async (req, res) => {
       const query = { userType: { $eq: "jobseeker" } };
       const cursor = userCollections.find(query);
       const jobseekers = await cursor.toArray();
@@ -481,7 +481,7 @@ async function run() {
     });
 
     // api to show a user by id
-    app.get("/users/:id", async (req, res) => {
+    app.get("/api/users/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const user = await userCollections.findOne(query);
@@ -490,7 +490,7 @@ async function run() {
     });
 
     // api to add a user as admin
-    app.put("/makeAdminUser/:email", async (req, res) => {
+    app.put("/api/makeAdminUser/:email", async (req, res) => {
       const email = req.params.email;
       const filter = { email };
       const options = { upsert: true };
@@ -509,7 +509,7 @@ async function run() {
     });
 
     // api to find admin user by email
-    app.get("/adminUser/:email", async (req, res) => {
+    app.get("/api/adminUser/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       const user = await userCollections.findOne(query);
@@ -517,7 +517,7 @@ async function run() {
     });
 
     // api to find a employer user by email
-    app.get("/employerUser/:email", async (req, res) => {
+    app.get("/api/employerUser/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       const user = await userCollections.findOne(query);
@@ -525,7 +525,7 @@ async function run() {
     });
 
     // api to find jobseeker user by email
-    app.get("/jobseekerUser/:email", async (req, res) => {
+    app.get("/api/jobseekerUser/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       const user = await userCollections.findOne(query);
@@ -533,7 +533,7 @@ async function run() {
     });
 
     // api to update a user
-    app.put("/users/:id", async (req, res) => {
+    app.put("/api/users/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const user = req.body;
@@ -554,7 +554,7 @@ async function run() {
     });
 
     // api to delete a user
-    app.delete("/users/:id", async (req, res) => {
+    app.delete("/api/users/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await userCollections.deleteOne(query);
@@ -567,7 +567,7 @@ async function run() {
     //////////////////////////// Employer api Section Start //////////////////////////////////////////////
 
     // api to save a employer Profile
-    app.post("/employerProfile", cors(corsOptions), async (req, res) => {
+    app.post("/api/employerProfile", cors(corsOptions), async (req, res) => {
       const employer = req.body;
       const bodyData = new FormData();
       var resx = employer.image.split(",")[1].trim();
@@ -609,7 +609,7 @@ async function run() {
     });
 
     // api to show a employer by emailid
-    app.get("/employer/:email", async (req, res) => {
+    app.get("/api/employer/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       const employer = await employerCollections.findOne(query);
@@ -625,7 +625,7 @@ async function run() {
     // })
 
     // api to update employer profile
-    app.put("/employerupdate/:id", async (req, res) => {
+    app.put("/api/employerupdate/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const employer = req.body;
@@ -664,7 +664,7 @@ async function run() {
     });
 
     // show all application by job seeker email
-    app.get("/postedjob", async (req, res) => {
+    app.get("/api/postedjob", async (req, res) => {
       let query = {};
       if (req.query.email) {
         query = {
@@ -690,14 +690,14 @@ async function run() {
     //////////////////////////// Job Seeker api Section Start //////////////////////////////////////////////
 
     // api to save a jobseekers Profile
-    app.post("/jobseekerProfile", async (req, res) => {
+    app.post("/api/jobseekerProfile", async (req, res) => {
       const jobseeker = req.body;
       const result = await jobseekerCollections.insertOne(jobseeker);
       res.send(result);
     });
 
     // api to show a jobseeker by email
-    app.get("/jobseeker/:email", async (req, res) => {
+    app.get("/api/jobseeker/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       const jobseeker = await jobseekerCollections.findOne(query);
@@ -708,7 +708,7 @@ async function run() {
     const Axios = require("axios");
     // api to save a jobseekers's Personal Details
     const imageHostKey = "79e6ec2db50a9ac8dbdb3b42a1accc92";
-    app.post("/jobSeekersPersonal", async (req, res) => {
+    app.post("/api/jobSeekersPersonal", async (req, res) => {
       const savedData = req.body;
       console.log("rewfiles", savedData);
 
@@ -769,14 +769,14 @@ async function run() {
     });
 
     // api to show jobseekers's Personal Details Data
-    app.get("/jobSeekersPersonal", async (req, res) => {
+    app.get("/api/jobSeekersPersonal", async (req, res) => {
       const query = {};
       const result = await jobSeekersPersonalDetails.find(query).toArray();
       res.send(result);
     });
 
     // api to show jobseekers's Personal Details Data by id
-    app.get("/jobSeekersPersonal/:email", async (req, res) => {
+    app.get("/api/jobSeekersPersonal/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
 
@@ -785,7 +785,7 @@ async function run() {
     });
 
     // api to update jobseekers personal data
-    app.put("/jobSeekersPersonal/:id", async (req, res) => {
+    app.put("/api/jobSeekersPersonal/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const jobSeeker = req.body;
@@ -834,7 +834,7 @@ async function run() {
     });
 
     // api to show jobseekers's Expriences Data by id
-    app.get("/jobSeekersExpriences/:email", async (req, res) => {
+    app.get("/api/jobSeekersExpriences/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
       const result = await jobSeekersExperiences.findOne(query);
@@ -843,7 +843,7 @@ async function run() {
 
     // api to update jobseekers's Expriences Data by id
 
-    app.put("/jobSeekersExperiences/:id", async (req, res) => {
+    app.put("/api/jobSeekersExperiences/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const jobSeeker = req.body;
@@ -884,7 +884,7 @@ async function run() {
     });
 
     // api to show  jobseeker academic and training Data by id
-    app.get("/jobseekersAcademics/:email", async (req, res) => {
+    app.get("/api/jobseekersAcademics/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
 
@@ -894,7 +894,7 @@ async function run() {
     });
 
     // api to update  jobseekers academic and training data update
-    app.put("/jobseekersAcademics/:id", async (req, res) => {
+    app.put("/api/jobseekersAcademics/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const jobSeeker = req.body;
@@ -962,7 +962,7 @@ async function run() {
     });
 
     // api to show jobseekrs  Careers and Skill Data by id
-    app.get("/jobSeekersCareers/:email", async (req, res) => {
+    app.get("/api/jobSeekersCareers/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
 
@@ -972,7 +972,7 @@ async function run() {
     });
 
     // api to update jobseekrs  Careers and  Skill Data by id
-    app.put("/jobseekersCareersSkill/:id", async (req, res) => {
+    app.put("/api/jobseekersCareersSkill/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const jobSeeker = req.body;
@@ -1016,7 +1016,7 @@ async function run() {
     });
 
     // api to show  Languages and References Data by id
-    app.get("/jobSeekersReferences/:email", async (req, res) => {
+    app.get("/api/jobSeekersReferences/:email", async (req, res) => {
       const email = req.params.email;
       const query = { email };
 
@@ -1026,7 +1026,7 @@ async function run() {
     });
 
     // api to update  Languages ans References Data by id
-    app.put("/jobseekersLanguagesReferences/:id", async (req, res) => {
+    app.put("/api/jobseekersLanguagesReferences/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const jobSeeker = req.body;
@@ -1070,7 +1070,7 @@ async function run() {
     });
 
     // api to save a jobseeker's Experience Data
-    app.post("/jobSeekersExperiences", async (req, res) => {
+    app.post("/api/jobSeekersExperiences", async (req, res) => {
       const reqestedData = req.body;
 
       const query = {
@@ -1089,14 +1089,14 @@ async function run() {
     });
 
     // api to show jobseeker's Experience Data
-    app.get("/jobSeekersExperiences", async (req, res) => {
+    app.get("/api/jobSeekersExperiences", async (req, res) => {
       const query = {};
       const result = await jobSeekersExperiences.find(query).toArray();
       res.send(result);
     });
 
     // api to save a jobseeker's Academic and Training Data
-    app.post("/jobSeekersAcademics", async (req, res) => {
+    app.post("/api/jobSeekersAcademics", async (req, res) => {
       const reqestedData = req.body;
 
       const query = {
@@ -1115,14 +1115,14 @@ async function run() {
     });
 
     // api to show jobseeker's Academic and Training Data
-    app.get("/jobSeekersAcademics", async (req, res) => {
+    app.get("/api/jobSeekersAcademics", async (req, res) => {
       const query = {};
       const result = await jobSeekersAcademics.find(query).toArray();
       res.send(result);
     });
 
     // api to save a jobseeker's Career and Skill Data
-    app.post("/jobSeekersCareers", async (req, res) => {
+    app.post("/api/jobSeekersCareers", async (req, res) => {
       const dataList = req.body;
 
       const query = {
@@ -1141,14 +1141,14 @@ async function run() {
     });
 
     // api to show jobseeker's Career and Skill Data
-    app.get("/jobSeekersCareers", async (req, res) => {
+    app.get("/api/jobSeekersCareers", async (req, res) => {
       const query = {};
       const result = await jobSeekersCareers.find(query).toArray();
       res.send(result);
     });
 
     // api to save a jobseeker's Languages and References
-    app.post("/jobSeekersReferences", async (req, res) => {
+    app.post("/api/jobSeekersReferences", async (req, res) => {
       const dataList = req.body;
 
       const query = {
@@ -1175,7 +1175,7 @@ async function run() {
 
     // aggregation of jobSeekers all primary data collections
     // app.get("/employeesAggregatedData/:email", async (req, res) => {
-    app.get("/jobSeekersAllData/:email", async (req, res) => {
+    app.get("/api/jobSeekersAllData/:email", async (req, res) => {
       // const email = 'salam@gmail.com';
       const email = req.params.email;
       // const query = { email };
@@ -1310,7 +1310,7 @@ async function run() {
     //////////////////////////// Subscriber api Section Start ////////////////////////////////////////////
 
     // api to save a suscriber
-    app.post("/subscribers", async (req, res) => {
+    app.post("/api/subscribers", async (req, res) => {
       const subscriber = req.body;
 
       const query = {
@@ -1331,14 +1331,14 @@ async function run() {
     });
 
     // api to show all suscriber
-    app.get("/subscribers", async (req, res) => {
+    app.get("/api/subscribers", async (req, res) => {
       const query = {};
       const result = await subscriberCollections.find(query).toArray();
       res.send(result);
     });
 
     // api to delete a subscriber
-    app.delete("/subscribers/:id", async (req, res) => {
+    app.delete("/api/subscribers/:id", async (req, res) => {
       const id = req.params.id;
       // console.log('Want to delete the ID', id)
       const objectedId = { _id: new ObjectId(id) };
@@ -1354,7 +1354,7 @@ async function run() {
 }
 run().catch((err) => console.log(err));
 
-app.get("/", (req, res) => [
+app.get("/api", (req, res) => [
   res.send("The Careers Bangladesh Server is Running."),
 ]);
 
