@@ -93,7 +93,7 @@ async function run() {
     });
 
     // api to show Job Categories
-    app.get("/jobCategories", async (req, res) => {
+    app.get("/api/jobCategories", async (req, res) => {
       const query = {};
       const cursor = jobCategoriesCollections.find(query);
       const category = await cursor.toArray();
@@ -115,7 +115,7 @@ async function run() {
     //////////////////////////// job Post api Section Start//////////////////////////////////////////////
 
     // api to save a new Job
-    app.post("/jobs", async (req, res) => {
+    app.post("/api/jobs", async (req, res) => {
       const job = req.body;
       const result = await jobCollections.insertOne(job);
       res.status(200).json(result);
