@@ -8,8 +8,12 @@
   ],
   "routes": [
     {
+      "src": "/api/.*",
+      "dest": "http://careersbangladesh.com"
+    },
+    {
       "src": "/(.*)",
-      "dest": "./index.js"
+      "dest": "index.html"
     }
   ]
 }
