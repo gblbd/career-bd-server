@@ -12,7 +12,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://careersbangladesh.com"
+          "value": "http://localhost:3000"
         }
       ]
     }
@@ -20,7 +20,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "https://careersbangladesh.com"
+      "destination": "http://localhost:3000"
     }
   ],
   "crons": [
