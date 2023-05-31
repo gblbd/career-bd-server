@@ -13,7 +13,7 @@ app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 
 // midddle wares
-app.use(express.json());
+//app.use(express.json());
 app.use(cors());
 
 // const whitelist = ["https://careersbangladesh.com", "http://localhost:3000"]
@@ -90,7 +90,7 @@ async function run() {
     });
     // api to save a Job Category
     app.post("/jobCategories", async (req, res) => {
-      res.setHeader('Cache-Control', 'no-cache');
+      
 
       const category = req.body;
       const result = await jobCategoriesCollections.insertOne(category);
@@ -99,15 +99,11 @@ async function run() {
 
     // api to show Job Categories
     app.get("/jobCategories", async (req, res) => {
-      res.setHeader('Cache-Control', 'no-cache');
- 
-      try {
+     
         const result = await jobCategoriesCollections.find({})
-        return  res.json(result)
-      } catch (error) {
-        return res.status(400).json(error);
-      }
-      ;
+        res.send(result);
+    
+      
     });
 
     // // api to delete a JobCategory
@@ -125,7 +121,7 @@ async function run() {
 
     // api to save a new Job
     app.post("/jobs", async (req, res) => {
-      res.setHeader('Cache-Control', 'no-cache');
+      
       const job = req.body;
       const result = await jobCollections.insertOne(job);
       res.send(result);
