@@ -84,7 +84,10 @@ async function run() {
       .collection("savedJobs");
 
     //////////////////////////// job Category api Section Start//////////////////////////////////////////////
-
+    app.use((req, res, next) => {
+      res.removeHeader('ETag');
+      next();
+    });
     // api to save a Job Category
     app.post("/jobCategories", async (req, res) => {
       res.setHeader('Cache-Control', 'no-cache');
