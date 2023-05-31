@@ -2,19 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "./index.js",
+      "src": "index.js",
       "use": "@now/node"
     }
   ],
-
   "routes": [
     {
       "src": "/(.*)",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
-      "headers": {
-        "Access-Control-Allow-Origin": "http://careersbangladesh.com"
-      },
-      "dest": "index.html"
+
+      "dest": "index.js"
     }
   ]
 }
