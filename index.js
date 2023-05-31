@@ -91,6 +91,7 @@ async function run() {
     // api to save a Job Category
     app.post("/jobCategories", async (req, res) => {
       res.setHeader('Cache-Control', 'no-cache');
+
       const category = req.body;
       const result = await jobCategoriesCollections.insertOne(category);
       res.send(result);
@@ -99,10 +100,14 @@ async function run() {
     // api to show Job Categories
     app.get("/jobCategories", async (req, res) => {
       res.setHeader('Cache-Control', 'no-cache');
-      const query = {};
-      const cursor = jobCategoriesCollections.find(query);
-      const category = await cursor.toArray();
-      res.send(category);
+ 
+      try {
+        const result = await jobCategoriesCollections.find({})
+        return  res.json(result)
+      } catch (error) {
+        return res.status(400).json(error);
+      }
+      ;
     });
 
     // // api to delete a JobCategory
