@@ -2,38 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const { query } = require("express");
+const axios = require('axios');
 require("dotenv").config();
-const bodyParser = require("body-parser");
 
-const fileUpload = require("express-fileupload");
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(fileUpload());
-app.use(bodyParser.json({ limit: "5mb" }));
-app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 
 // midddle wares
-app.use(express.json());
 app.use(cors());
-app.use((req,res,next)=>{
-  res.setHeader('Access-Control-Allow-Origin','*');
-  res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
-  res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
-  next(); 
-})
-// const whitelist = ["https://careersbangladesh.com", "http://localhost:3000"]
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (!origin || whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error("Not allowed by CORS"))
-//     }
-//   },
-//   credentials: true,
-// }
-// app.use(cors(corsOptions))
-
+app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.v2wwlww.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
@@ -46,47 +23,23 @@ const client = new MongoClient(uri, {
 // async await
 async function run() {
   try {
-    const jobCategoriesCollections = client
-      .db("careersBangladeshDB")
-      .collection("jobCategories");
+    const jobCategoriesCollections = client.db("careersBangladeshDB").collection("jobCategories");
     const jobCollections = client.db("careersBangladeshDB").collection("jobs");
 
-    const userCollections = client
-      .db("careersBangladeshDB")
-      .collection("users");
-    const employerCollections = client
-      .db("careersBangladeshDB")
-      .collection("employer");
-    const jobseekerCollections = client
-      .db("careersBangladeshDB")
-      .collection("jobseeker");
+    const userCollections = client.db("careersBangladeshDB").collection("users");
+    const employerCollections = client.db("careersBangladeshDB").collection("employer");
+    const jobseekerCollections = client.db("careersBangladeshDB").collection("jobseeker");
 
-    const jobSeekersPersonalDetails = client
-      .db("careersBangladeshDB")
-      .collection("empPersonal");
-    const jobSeekersExperiences = client
-      .db("careersBangladeshDB")
-      .collection("empExperiences");
-    const jobSeekersAcademics = client
-      .db("careersBangladeshDB")
-      .collection("empAcademics");
-    const jobSeekersCareers = client
-      .db("careersBangladeshDB")
-      .collection("empCareers");
-    const jobSeekersReferences = client
-      .db("careersBangladeshDB")
-      .collection("empReferences");
+    const jobSeekersPersonalDetails = client.db("careersBangladeshDB").collection("empPersonal");
+    const jobSeekersExperiences = client.db("careersBangladeshDB").collection("empExperiences");
+    const jobSeekersAcademics = client.db("careersBangladeshDB").collection("empAcademics");
+    const jobSeekersCareers = client.db("careersBangladeshDB").collection("empCareers");
+    const jobSeekersReferences = client.db("careersBangladeshDB").collection("empReferences");
 
-    const subscriberCollections = client
-      .db("careersBangladeshDB")
-      .collection("subscribers");
+    const subscriberCollections = client.db("careersBangladeshDB").collection("subscribers");
 
-    const applicationCollections = client
-      .db("careersBangladeshDB")
-      .collection("applications");
-    const savedJobCollections = client
-      .db("careersBangladeshDB")
-      .collection("savedJobs");
+    const applicationCollections = client.db("careersBangladeshDB").collection("applications");
+    const savedJobCollections = client.db("careersBangladeshDB").collection("savedJobs");
 
     //////////////////////////// job Category api Section Start//////////////////////////////////////////////
 
@@ -178,16 +131,12 @@ async function run() {
           salaryReview: jobUpdate.salaryReview,
           others: jobUpdate.others,
           status: jobUpdate.status,
-        },
+        }
       };
 
-      const result = await jobCollections.updateOne(
-        filter,
-        updatedJobData,
-        options
-      );
+      const result = await jobCollections.updateOne(filter, updatedJobData, options);
       res.send(result);
-    });
+    })
 
     // api to search  Job by search field
     app.get("/jobSearch", async (req, res) => {
@@ -238,33 +187,27 @@ async function run() {
 
     // api to search  Job by search field
     app.get("/homeJobSearch/:search/:search2/:search3", async (req, res) => {
+
       let searchData = {};
       // console.log("Not searchData :",searchData.length);
+
 
       searchData = {
         $or: [
           {
-            jobTitle: {
-              $regex: new RegExp(req.params.search.toLowerCase(), "i"),
-            },
+            jobTitle: { $regex: new RegExp(req.params.search.toLowerCase(), "i"), },
           },
           {
-            location: {
-              $regex: new RegExp(req.params.search2.toLowerCase(), "i"),
-            },
+            location: { $regex: new RegExp(req.params.search2.toLowerCase(), "i"), },
           },
           {
-            orgaType: {
-              $regex: new RegExp(req.params.search3.toLowerCase(), "i"),
-            },
+            orgaType: { $regex: new RegExp(req.params.search3.toLowerCase(), "i"), },
           },
         ],
-      };
+      }
 
-      const result = await jobCollections
-        .find(searchData)
-        .sort({ postDate: -1 })
-        .toArray();
+
+      const result = await jobCollections.find(searchData).sort({ postDate: -1 }).toArray();
 
       res.send(result);
     });
@@ -354,17 +297,17 @@ async function run() {
     app.post("/applications", async (req, res) => {
       const application = req.body;
 
-      // const query = {
-      //   jobId: application.jobId,
-      //   jobSeekerEmail: application.jobSeekerEmail,
-      // };
+      const query = {
+        jobId: application.jobId,
+        jobSeekerEmail: application.jobSeekerEmail,
+      };
 
-      // const alreadyApplied = await applicationCollections.find(query).toArray();
+      const alreadyApplied = await applicationCollections.find(query).toArray();
 
-      // // if (alreadyApplied.length) {
-      // //   const message = `You have already applied on this job${application.jobTitle}`;
-      // //   return res.send({ acknowledged: false, message });
-      // // }
+      if (alreadyApplied.length) {
+        const message = `You have already applied on this job${application.jobTitle}`;
+        return res.send({ acknowledged: false, message });
+      }
 
       result = await applicationCollections.insertOne(application);
       res.send(result);
@@ -502,8 +445,7 @@ async function run() {
       const updatedDoc = {
         $set: {
           role: "admin",
-        },
-        employerUser,
+        }, employerUser
       };
       const result = await userCollections.updateOne(
         filter,
@@ -570,50 +512,53 @@ async function run() {
     //////////////////////////// User api Section end //////////////////////////////////////////////
 
     //////////////////////////// Employer api Section Start //////////////////////////////////////////////
-    const FormData = require("form-data");
-    const Axios = require("axios");
-    // api to save a jobseekers's Personal Details
     const imageHostKey = "79e6ec2db50a9ac8dbdb3b42a1accc92";
     // api to save a employer Profile
-    app.post("/employerProfile", cors(corsOptions), async (req, res) => {
-      const employer = req.body;
-      const bodyData = new FormData();
-      var resx = employer.image.split(",")[1].trim();
-      console.log("one");
-      bodyData.append("image", resx);
-      const response = await Axios({
-        method: "post",
-        url: `https://api.imgbb.com/1/upload?key=${imageHostKey}`,
-        headers: bodyData.getHeaders(),
-        data: bodyData,
-      });
+    app.post("/employerProfile", async (req, res) => {
+      try {
+        const employer = req.body;
+        console.log(req.body)
+        const bodyData = new FormData();
+        var resx = employer?.image?.company_logo.split(",")[1].trim();
+        console.log("one");
+        bodyData.append("image", resx);
+        const response = await axios({
+          method: "post",
+          url: `https://api.imgbb.com/1/upload?key=${imageHostKey}`,
 
-      console.log("cccccc", response);
-      const imageUrl = response.data.data.url;
-      const newData = {
-        email: employer.email,
-        name: employer.name,
+          data: bodyData,
+        });
 
-        companyNameEn: employer.companyNameEn,
-        organizationType: employer.organizationType,
-        companyNameBn: employer.companyNameBn,
+        console.log("cccccc", response);
+        const imageUrl = response.data.data.url;
+        const newData = {
+          email: employer.email,
+          name: employer.name,
 
-        companyLogo: imageUrl,
-        estdYear: employer.estdYear,
-        companySize: employer.companySize,
-        addressEng: employer.addressEng,
-        addressBng: employer.addressBng,
-        busiDescription: employer.busiDescription,
+          companyNameEn: employer.companyNameEn,
+          organizationType: employer.organizationType,
+          companyNameBn: employer.companyNameBn,
 
-        tradeLicense: employer.tradeLicense,
-        websiteURL: employer.websiteURL,
-        contactPersonName: employer.contactPersonName,
-        contactPersonDesignation: employer.contactPersonDesignation,
-        contactPersonEmail: employer.contactPersonEmail,
-        contactPersonPhone: employer.contactPersonPhone,
+          companyLogo: imageUrl,
+          estdYear: employer.estdYear,
+          companySize: employer.companySize,
+          addressEng: employer.addressEng,
+          addressBng: employer.addressBng,
+          busiDescription: employer.busiDescription,
+
+          tradeLicense: employer.tradeLicense,
+          websiteURL: employer.websiteURL,
+          contactPersonName: employer.contactPersonName,
+          contactPersonDesignation: employer.contactPersonDesignation,
+          contactPersonEmail: employer.contactPersonEmail,
+          contactPersonPhone: employer.contactPersonPhone,
+        };
+        const result = await employerCollections.insertOne(newData);
+        res.send(result);
+      } catch (error) {
+        console.error("An error occurred:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
       }
-      const result = await employerCollections.insertOne(newData);
-      res.send(result);
     });
 
     // api to show a employer by emailid
@@ -713,9 +658,11 @@ async function run() {
     });
 
 
+    // api to save a jobseekers's Personal Details
+
     app.post("/jobSeekersPersonal", async (req, res) => {
       const savedData = req.body;
-      console.log("rewfiles", savedData);
+      console.log("req.body", req.body);
 
       const query = {
         email: savedData.email,
@@ -731,13 +678,13 @@ async function run() {
       //upload
       const bodyData = new FormData();
 
-      var resx = savedData.image.split(",")[1].trim();
-      console.log("one");
+      var resx = savedData?.image.image.split(",")[1].trim();
+      console.log("one", resx);
       bodyData.append("image", resx);
-      const response = await Axios({
+      const response = await axios({
         method: "post",
         url: `https://api.imgbb.com/1/upload?key=${imageHostKey}`,
-        headers: bodyData.getHeaders(),
+
         data: bodyData,
       });
 
@@ -769,7 +716,6 @@ async function run() {
       };
 
       const result = await jobSeekersPersonalDetails.insertOne(newData);
-
       res.send(result);
     });
 
@@ -1360,7 +1306,7 @@ async function run() {
 run().catch((err) => console.log(err));
 
 app.get("/", (req, res) => [
-  res.send("The Careers Bangladesh Server is Running."),
+  res.send("Careers Bangladesh Server is Running."),
 ]);
 
 app.listen(port, () => [console.log(`Listen to port ${port}`)]);
