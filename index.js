@@ -82,12 +82,22 @@ async function run() {
     app.get("/jobs", async (req, res) => {
       try {
         const query = {};
-        const cursor = jobCollections.find(query).sort({ postDate: -1 });
+        // const cursor = jobCollections.find(query).sort({ postDate: -1 });
+        const cursor = jobCollections.find({ ...query, status: "Active" }).sort({ postDate: -1 });
         const job = await cursor.toArray();
         res.send(job);
       } catch (err) {
         res.json({ message: err });
       }
+    });
+
+    // api to delete a job
+    app.delete("/deleteJob/:id", async (req, res) => {
+      const id = req.params.id;
+      // console.log('Want to delete the ID', id)
+      const objectedId = { _id: new ObjectId(id) };
+      const result = await jobCollections.deleteOne(objectedId);
+      res.send(result);
     });
 
     // email,postersName,category,jobTitle,companyLogo,organization,
@@ -100,7 +110,7 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const jobUpdate = req.body;
-      // console.log(filter, "jobUpdate : ",jobUpdate);
+      console.log("jobUpdate : ", jobUpdate);
 
       const options = { upsert: true };
 
@@ -108,9 +118,6 @@ async function run() {
         $set: {
           category: jobUpdate.category,
           jobTitle: jobUpdate.jobTitle,
-          // companyLogo: jobUpdate.companyLogo,
-          organization: jobUpdate.organization,
-          orgaType: jobUpdate.orgaType,
           location: jobUpdate.location,
           vacancies: jobUpdate.vacancies,
           education: jobUpdate.education,
@@ -119,14 +126,33 @@ async function run() {
           postDate: jobUpdate.postDate,
           deadLine: jobUpdate.deadLine,
           applyStatus: jobUpdate.applyStatus,
+          ageLimitFrom: jobUpdate.ageLimitFrom,
+          ageLimitTo: jobUpdate.ageLimitTo,
+          applicableFor: jobUpdate.applicableFor,
+
           employmentStatus: jobUpdate.employmentStatus,
           businessDescription: jobUpdate.businessDescription,
           jobLevel: jobUpdate.jobLevel,
           workPlace: jobUpdate.workPlace,
           jobContext: jobUpdate.jobContext,
           jobResponst: jobUpdate.jobResponst,
+
+          workdayFrom: jobUpdate.workdayFrom,
+          workdayTo: jobUpdate.workdayTo,
+          worktimeFrom: jobUpdate.worktimeFrom,
+          worktimeTo: jobUpdate.worktimeTo,
+
           salaryFrom: jobUpdate.salaryFrom,
           salaryTo: jobUpdate.salaryTo,
+          salary: jobUpdate.salary,
+
+          benifitsOne: jobUpdate.benifitsOne,
+          benifitsTwo: jobUpdate.benifitsTwo,
+          benifitsThree: jobUpdate.benifitsThree,
+          benifitsFour: jobUpdate.benifitsFour,
+          benifitsFive: jobUpdate.benifitsFive,
+          benifitsSix: jobUpdate.benifitsSix,
+
           yearlyBonus: jobUpdate.yearlyBonus,
           salaryReview: jobUpdate.salaryReview,
           others: jobUpdate.others,
@@ -517,10 +543,10 @@ async function run() {
     app.post("/employerProfile", async (req, res) => {
       try {
         const employer = req.body;
-        console.log(req.body)
+        // console.log(req.body)
         const bodyData = new FormData();
         var resx = employer?.image?.company_logo.split(",")[1].trim();
-        console.log("one");
+        // console.log("one");
         bodyData.append("image", resx);
         const response = await axios({
           method: "post",
@@ -529,7 +555,7 @@ async function run() {
           data: bodyData,
         });
 
-        console.log("cccccc", response);
+        // console.log("cccccc", response);
         const imageUrl = response.data.data.url;
         const newData = {
           email: employer.email,
@@ -541,7 +567,6 @@ async function run() {
 
           companyLogo: imageUrl,
           estdYear: employer.estdYear,
-          companySize: employer.companySize,
           addressEng: employer.addressEng,
           addressBng: employer.addressBng,
           busiDescription: employer.busiDescription,
@@ -556,7 +581,7 @@ async function run() {
         const result = await employerCollections.insertOne(newData);
         res.send(result);
       } catch (error) {
-        console.error("An error occurred:", error);
+        // console.error("An error occurred:", error);
         return res.status(500).json({ error: "Internal Server Error" });
       }
     });
@@ -564,8 +589,10 @@ async function run() {
     // api to show a employer by emailid
     app.get("/employer/:email", async (req, res) => {
       const email = req.params.email;
+      // console.log("Employer Email ", email);
       const query = { email };
       const employer = await employerCollections.findOne(query);
+      // console.log("employer Data", employer);
       res.send(employer);
     });
 
@@ -662,7 +689,7 @@ async function run() {
 
     app.post("/jobSeekersPersonal", async (req, res) => {
       const savedData = req.body;
-      console.log("req.body", req.body);
+      // console.log("req.body", req.body);
 
       const query = {
         email: savedData.email,
@@ -679,7 +706,7 @@ async function run() {
       const bodyData = new FormData();
 
       var resx = savedData?.image.image.split(",")[1].trim();
-      console.log("one", resx);
+      // console.log("one", resx);
       bodyData.append("image", resx);
       const response = await axios({
         method: "post",
@@ -688,7 +715,7 @@ async function run() {
         data: bodyData,
       });
 
-      console.log("cccccc", response);
+      // console.log("cccccc", response);
       const imageUrl = response.data.data.url;
       const newData = {
         name: savedData.name,
