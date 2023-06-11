@@ -82,7 +82,6 @@ async function run() {
     app.get("/jobs", async (req, res) => {
       try {
         const query = {};
-        // const cursor = jobCollections.find(query).sort({ postDate: -1 });
         const cursor = jobCollections.find({ ...query, status: "Active" }).sort({ postDate: -1 });
         const job = await cursor.toArray();
         res.send(job);
@@ -94,16 +93,10 @@ async function run() {
     // api to delete a job
     app.delete("/deleteJob/:id", async (req, res) => {
       const id = req.params.id;
-      // console.log('Want to delete the ID', id)
       const objectedId = { _id: new ObjectId(id) };
       const result = await jobCollections.deleteOne(objectedId);
       res.send(result);
     });
-
-    // email,postersName,category,jobTitle,companyLogo,organization,
-    //   orgaType,location,vacancies,education,experience,companySize,postDate,deadLine,
-    //   applyStatus,employmentStatus,businessDescription,jobLevel,workPlace,jobContext,jobResponst,
-    //   salaryFrom,salaryTo,yearlyBonus,salaryReview,status,others}
 
     // api to update  a posted job
     app.put("/postedJobUpdate/:id", async (req, res) => {
@@ -171,7 +164,7 @@ async function run() {
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
       let skipSize = page * size;
-      const count = await jobCollections.count();
+      const count = await jobCollections.estimatedDocumentCount();
       // console.log("count", count);
       let query = {};
 
@@ -183,41 +176,15 @@ async function run() {
         };
       }
       // console.log("search?.length", search?.length);
-      const cursor = jobCollections
-        .find(query)
-        .sort({ postDate: -1 })
-        .skip(skipSize)
-        .limit(size);
+      const cursor = jobCollections.find(query).skip(skipSize).limit(size).sort({ postDate: -1 });
       const job = await cursor.toArray();
       res.send({ count, job });
     });
 
-    // api to show Job
-    // app.get("/jobSearchHome/:search", async (req, res) => {
-    //   const search = req.params.search;
-    //   // console.log("search data : ", search)
-    //   let query = {};
-
-    //   if (search.length) {
-    //     query = {
-    //       $text: {
-    //         $search: search,
-    //       },
-    //     };
-    //   }
-
-    //   const cursor = jobCollections.find(query).sort({ postDate: -1 });
-    //   const job = await cursor.toArray();
-    //   res.send(job);
-    // });
-
     // api to search  Job by search field
     app.get("/homeJobSearch/:search/:search2/:search3", async (req, res) => {
-
       let searchData = {};
       // console.log("Not searchData :",searchData.length);
-
-
       searchData = {
         $or: [
           {
@@ -231,10 +198,7 @@ async function run() {
           },
         ],
       }
-
-
       const result = await jobCollections.find(searchData).sort({ postDate: -1 }).toArray();
-
       res.send(result);
     });
 
@@ -480,6 +444,16 @@ async function run() {
       );
       res.send(result);
     });
+
+    // app.get("/updateJobsCategory", async (req, res) => {
+    //   const email = 'shuvra@gmail.com';
+    //   const filter = { email };
+    //   const options = { upsert: true };
+    //   const updatedDoc = ({ category: "others" }, { $set: { category: "647ec956524352a29d5c60dc" } });
+    //   // db.collection.updateMany({ category: "others" },  { $set: { categoryName: "647ec956524352a29d5c60dc" } });
+    //   const result = await jobCollections.updateMany(filter, updatedDoc, options);
+    //   res.send(result);
+    // });
 
     // api to find admin user by email
     app.get("/adminUser/:email", async (req, res) => {
