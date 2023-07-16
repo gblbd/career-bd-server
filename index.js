@@ -58,7 +58,7 @@ async function run() {
       res.send(category);
     });
 
-    // // api to delete a JobCategory
+    // // api to post a JobCategory
     // app.delete('/jobCategories/:id', async (req, res) => {
     //     const id = req.params.id;
     //     const query = { _id: new ObjectId(id) }
@@ -178,29 +178,54 @@ async function run() {
       // console.log("search?.length", search?.length);
       const cursor = jobCollections.find(query).skip(skipSize).limit(size).sort({ postDate: -1 });
       const job = await cursor.toArray();
-      res.send({ count, job });
+      res.send(job);
     });
 
     // api to search  Job by search field
-    app.get("/homeJobSearch/:search/:search2/:search3", async (req, res) => {
-      let searchData = {};
-      // console.log("Not searchData :",searchData.length);
-      searchData = {
+
+
+
+    // api to search  Job by search field
+    app.get("/homeJobSearch", async (req, res) => {
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      const skipSize = page * size;
+
+      let query = {
         $or: [
           {
-            jobTitle: { $regex: new RegExp(req.params.search.toLowerCase(), "i"), },
+            jobTitle: { $regex: new RegExp(req.query.jobTitle, "i") },
           },
           {
-            location: { $regex: new RegExp(req.params.search2.toLowerCase(), "i"), },
+            location: { $regex: new RegExp(req.query.location, "i") },
           },
           {
-            orgaType: { $regex: new RegExp(req.params.search3.toLowerCase(), "i"), },
+            orgaType: { $regex: new RegExp(req.query.orgaType, "i") },
+          },
+          {
+            page: { $regex: new RegExp(req.query.page, "i") },
+          },
+          {
+            size: { $regex: new RegExp(req.query.size, "i") },
           },
         ],
-      }
-      const result = await jobCollections.find(searchData).sort({ postDate: -1 }).toArray();
-      res.send(result);
+      };
+
+
+      const cursor = jobCollections
+        .find(query)
+        .sort({ postDate: -1 })
+        // .skip(skipSize)
+        // .limit(size)
+        ;
+      const jobs = await cursor.toArray();
+      const totalJobs = await jobCollections.countDocuments(query); // Get the total count of matching jobs
+
+      res.send({ jobs, totalJobs });
     });
+
+
+
 
     // show a job by id
     app.get("/jobs/:id", async (req, res) => {
@@ -220,16 +245,23 @@ async function run() {
 
     // show all saved job by job category
     app.get("/jobbycategory", async (req, res) => {
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      let skipSize = page * size;
+
+      // console.log("jobbycategory :", page, size);
+
+
       let query = {};
       if (req.query.category) {
         query = {
           category: req.query.category,
         };
       }
-      // console.log("Category id : ", query)
-      const cursor = jobCollections.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
+      const cursor = jobCollections.find(query).skip(skipSize).limit(size).sort({ postDate: -1 });
+      const job = await cursor.toArray();
+      const count = await jobCollections.countDocuments(query);
+      res.send({ job, count });
     });
 
     // search job by jobTitle saved job by job category
