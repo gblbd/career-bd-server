@@ -178,7 +178,7 @@ async function run() {
       // console.log("search?.length", search?.length);
       const cursor = jobCollections.find(query).skip(skipSize).limit(size).sort({ postDate: -1 });
       const job = await cursor.toArray();
-      res.send(job);
+      res.send({ job, count });
     });
 
     // api to search  Job by search field
