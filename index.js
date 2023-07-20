@@ -465,15 +465,9 @@ async function run() {
       const filter = { email };
       const options = { upsert: true };
       const updatedDoc = {
-        $set: {
-          role: "admin",
-        }, employerUser
+        $set: { role: "admin", }
       };
-      const result = await userCollections.updateOne(
-        filter,
-        updatedDoc,
-        options
-      );
+      const result = await userCollections.updateOne(filter, updatedDoc, options);
       res.send(result);
     });
 
