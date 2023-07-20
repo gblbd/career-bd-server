@@ -891,7 +891,7 @@ async function run() {
         $set: {
           examTitleOne: jobSeeker.examTitleOne,
           majorOne: jobSeeker.majorOne,
-          instituteOne: jobSeeker.resultOne,
+          instituteOne: jobSeeker.instituteOne,
           resultOne: jobSeeker.resultOne,
           passYearOne: jobSeeker.passYearOne,
 
